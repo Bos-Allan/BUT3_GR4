@@ -10,6 +10,11 @@ import com.iut.banque.exceptions.TechnicalException;
 import com.iut.banque.facade.BanqueFacade;
 import com.opensymphony.xwork2.ActionSupport;
 
+//pour mot de passe
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class CreerUtilisateur extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
@@ -85,6 +90,28 @@ public class CreerUtilisateur extends ActionSupport {
 		this.adresse = adresse;
 	}
 
+
+	/**
+	 * @return hashed password
+	 */
+	public static String encrypt(String userPwd) {
+		String hashedPassword = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-512");
+			byte[] encryptPass = md.digest(userPwd.getBytes(StandardCharsets.UTF_8));
+
+			StringBuilder sb = new StringBuilder();
+			for(int i=0; i< encryptPass.length ;i++){
+				sb.append(Integer.toString((encryptPass[i] & 0xff) + 0x100, 16).substring(1));
+			}
+			hashedPassword = sb.toString();
+		}
+		catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+		return hashedPassword;
+	}
+
 	/**
 	 * @return the userPwd
 	 */
@@ -158,7 +185,7 @@ public class CreerUtilisateur extends ActionSupport {
 	/**
 	 * Renvoie Le message à afficher si la création d'un utilisateur vient
 	 * d'être essayée.
-	 * 
+	 *
 	 * @return le message de l'action précédente
 	 */
 	public String getMessage() {
@@ -167,7 +194,7 @@ public class CreerUtilisateur extends ActionSupport {
 
 	/**
 	 * Setter du message provenant de l'action précedente.
-	 * 
+	 *
 	 * @param message
 	 */
 	public void setMessage(String message) {
@@ -177,7 +204,7 @@ public class CreerUtilisateur extends ActionSupport {
 	/**
 	 * Le result indique si l'utilisateur vient d'arriver sur la page ou a tenté
 	 * la création d'un utilisateur précedemment.
-	 * 
+	 *
 	 * @return le status de l'action précedente.
 	 */
 	public String getResult() {
@@ -186,7 +213,7 @@ public class CreerUtilisateur extends ActionSupport {
 
 	/**
 	 * Setter du result de l'action précedente
-	 * 
+	 *
 	 * @param result
 	 */
 	public void setResult(String result) {
@@ -195,15 +222,15 @@ public class CreerUtilisateur extends ActionSupport {
 
 	/**
 	 * Création d'un utilisateur.
-	 * 
+	 *
 	 * @return String : le status de l'action
 	 */
 	public String creationUtilisateur() {
 		try {
 			if (client) {
-				banque.createClient(userId, userPwd, nom, prenom, adresse, male, numClient);
+				banque.createClient(userId, encrypt(userPwd), nom, prenom, adresse, male, numClient);
 			} else {
-				banque.createManager(userId, userPwd, nom, prenom, adresse, male);
+				banque.createManager(userId,encrypt(userPwd) , nom, prenom, adresse, male);
 			}
 			this.message = "Le nouvel utilisateur avec le user id '" + userId + "' a bien été crée.";
 			this.result = "SUCCESS";

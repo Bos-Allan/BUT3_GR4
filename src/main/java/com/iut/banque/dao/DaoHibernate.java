@@ -1,5 +1,8 @@
 package com.iut.banque.dao;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -184,6 +187,25 @@ public class DaoHibernate implements IDao {
 		session.update(u);
 	}
 
+
+	public static String encrypt(String userPwd) {
+		String hashedPassword = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-512");
+			byte[] encryptPass = md.digest(userPwd.getBytes(StandardCharsets.UTF_8));
+
+			StringBuilder sb = new StringBuilder();
+			for(int i=0; i< encryptPass.length ;i++){
+				sb.append(Integer.toString((encryptPass[i] & 0xff) + 0x100, 16).substring(1));
+			}
+			hashedPassword = sb.toString();
+		}
+		catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+		return hashedPassword;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -203,7 +225,8 @@ public class DaoHibernate implements IDao {
 				if (user == null) {
 					return false;
 				}
-				return (userPwd.equals(user.getUserPwd()));
+				String hashedPasswordEntree= encrypt(userPwd);
+				return (hashedPasswordEntree.equals(user.getUserPwd()));
 			}
 		}
 	}
