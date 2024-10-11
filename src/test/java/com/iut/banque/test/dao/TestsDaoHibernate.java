@@ -38,11 +38,7 @@ import com.iut.banque.modele.Utilisateur;
 // TestsDaoHibernate-context.xml dans le même dosssier que la classe
 @ContextConfiguration("/test/resources/TestsDaoHibernate-context.xml")
 @Transactional("transactionManager")
-<<<<<<< HEAD
 
-=======
-//@Ignore
->>>>>>> 8c1534e588872f3b0bd6be2a30341f079c20c85c
 public class TestsDaoHibernate {
 
 	// Indique que c'est un champ à injecter automatiquement. Le bean est choisi
