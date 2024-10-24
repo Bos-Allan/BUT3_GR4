@@ -21,6 +21,7 @@ import com.iut.banque.facade.BanqueManager;
 @ContextConfiguration("/test/resources/TestsBanqueManager-context.xml")
 @Transactional("transactionManager")
 
+
 public class TestsBanqueManager {
 
 	@Autowired
