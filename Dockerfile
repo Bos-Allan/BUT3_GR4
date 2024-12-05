@@ -16,7 +16,7 @@ RUN mvn clean package -DskipTests
 
 FROM tomcat:9.0-jdk11-openjdk-slim
 
-COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+COPY target/*.war /usr/local/tomcat/webapps/asbank.war
 
 EXPOSE 8082
 

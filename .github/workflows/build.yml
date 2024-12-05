@@ -62,7 +62,7 @@ jobs:
 
       - name: Initialize database
         run: |
-          mysql -h 127.0.0.1 -uroot -proot Bankiut < ../../script/bankiut.sql
+          mysql -h 127.0.0.1 -uroot -proot Bankiut < ../script/bankiut.sql
 
       - name: Build and analyze
         env:
