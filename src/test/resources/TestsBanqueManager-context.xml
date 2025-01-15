@@ -43,8 +43,8 @@
 <!--		<property name="username" value="bosquet9u_appli" />-->
 <!--		<property name="password" value="32207485" />-->
 		<property name="url" value="jdbc:mysql://mariadb:3306/bankiuttest?useSSL=false" />
-		<property name="username" value="root" />
-		<property name="password"  value="root" />
+		<property name="username" value="admin" />
+		<property name="password"  value="admin" />
 		<!-- Nécessaire, sinon les test se font quand même -->
 		<property name="defaultAutoCommit" value="false" />
 	</bean>
