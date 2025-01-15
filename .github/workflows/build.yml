@@ -39,28 +39,54 @@ jobs:
           java-version: 11
           distribution: 'zulu'
 
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
       # Attendre que MariaDB soit prêt
-      - name: attendre que MariaDB soit pret
+      - name: Wait for MariaDB to be ready
         run: |
           until docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysqladmin --user=root --password=root --host=127.0.0.1 --port=3306 ping --silent; do
             echo "Waiting for MariaDB to be ready..."
             sleep 5
-          done 
+          done
 
-      - name: Initialize database
+      # Créer la base de données projet_devops
+      - name: Create databases
         run: |
           docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS Bankiut;"
           docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS Bankiut_test;"
 
-      - name: Import SQL files
+      # Copier et vérifier la présence de projet_devops.sql
+      - name: Copy bankiut.sql
         run: |
           docker cp "$GITHUB_WORKSPACE/script/bankiut.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiut.sql
-          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "cat /tmp/bankiut.sql | mysql -u root -proot123 Bankiut
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") ls /tmp/bankiut.sql || echo "File not found in container!"
 
+      # Importer projet_devops.sql
+      - name: Import bankiut.sql
+        run: |
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "cat /tmp/bankiut.sql | mysql -u root -proot Bankiut"
+
+      # Copier et importer projet_devops_test.sql
+      - name: Copy bankiuttest.sql
+        run: |
           docker cp "$GITHUB_WORKSPACE/script/bankiuttest.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiuttest.sql
-          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "cat /tmp/bankiuttest.sql | mysql -u root -proot123 Bankiut_test
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") ls /tmp/bankiuttest.sql || echo "File not found in container!"
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "cat /tmp/bankiuttest.sql | mysql -u root -proot Bankiut_test"
 
-      - name: Run SonarQube Analysis
+      ##### revoir cette partie pour config en focntion de votre sonarcloud
+      - name: execute
         working-directory: ./_00_ASBank2023
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
