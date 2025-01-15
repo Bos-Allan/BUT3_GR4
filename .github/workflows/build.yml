@@ -37,6 +37,17 @@ jobs:
           java-version: 11
           distribution: 'zulu'
 
+      - name: Verify SQL files exist
+        run: |
+          if [ ! -f "$GITHUB_WORKSPACE/script/bankiut.sql" ]; then
+            echo "Error: bankiut.sql not found!"
+            exit 1
+          fi
+          if [ ! -f "$GITHUB_WORKSPACE/script/bankiuttest.sql" ]; then
+            echo "Error: bankiuttest.sql not found!"
+            exit 1
+          fi
+
       - name: Wait for MariaDB to be ready
         run: |
           until docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysqladmin --user=root --password=root ping --silent; do
@@ -44,18 +55,21 @@ jobs:
             sleep 5
           done
 
-      - name: Initialize database
+      - name: Create databases
         run: |
           docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS Bankiut;"
           docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS Bankiut_test;"
 
-      - name: Import SQL files
+      - name: Copy and Import SQL files
         run: |
-          docker cp "$GITHUB_WORKSPACE/script/bankiut.sql" mariadb:/tmp/bankiut.sql
-          docker exec mariadb mysql -u root -proot Bankiut < /tmp/bankiut.sql
+          echo "Copying and importing bankiut.sql..."
+          docker cp "$GITHUB_WORKSPACE/script/bankiut.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiut.sql || { echo "Error: Failed to copy bankiut.sql"; exit 1; }
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot Bankiut < /tmp/bankiut.sql || { echo "Error: Failed to import bankiut.sql"; exit 1; }
 
-          docker cp "$GITHUB_WORKSPACE/script/bankiuttest.sql" mariadb:/tmp/bankiuttest.sql
-          docker exec mariadb mysql -u root -proot Bankiut_test < /tmp/bankiuttest.sql
+          echo "Copying and importing bankiuttest.sql..."
+          docker cp "$GITHUB_WORKSPACE/script/bankiuttest.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiuttest.sql || { echo "Error: Failed to copy bankiuttest.sql"; exit 1; }
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot Bankiut_test < /tmp/bankiuttest.sql || { echo "Error: Failed to import bankiuttest.sql"; exit 1; }
+
       - name: Run SonarQube Analysis
         working-directory: ./_00_ASBank2023
         env:
