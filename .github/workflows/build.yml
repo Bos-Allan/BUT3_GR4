@@ -18,6 +18,8 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: Bankiut
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
         ports:
           - 3306:3306
         options: >-
