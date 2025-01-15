@@ -87,7 +87,7 @@ jobs:
 
       ##### revoir cette partie pour config en focntion de votre sonarcloud
       - name: execute
-        working-directory: ./_00_ASBank2023
+        working-directory: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
