@@ -42,9 +42,9 @@
 <!--			value="jdbc:mysql://devbdd.iutmetz.univ-lorraine.fr:3306/bosquet9u_bankiuttest?useSSL=false" />-->
 <!--		<property name="username" value="bosquet9u_appli" />-->
 <!--		<property name="password" value="32207485" />-->
-		<property name="url" value="jdbc:mysql://mariadb:3306/bankiuttest?useSSL=false" />
-		<property name="username" value="admin" />
-		<property name="password"  value="admin" />
+		<property name="url" value="jdbc:mysql://mariadb:3306/Bankiut_test?useSSL=false" />
+		<property name="username" value="root" />
+		<property name="password"  value="root" />
 		<!-- Nécessaire, sinon les test se font quand même -->
 		<property name="defaultAutoCommit" value="false" />
 	</bean>
