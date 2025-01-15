@@ -60,15 +60,21 @@ jobs:
           docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS Bankiut;"
           docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS Bankiut_test;"
 
-      - name: Copy and Import SQL files
+      - name: Copy SQL files into container
         run: |
-          echo "Copying and importing bankiut.sql..."
-          docker cp "$GITHUB_WORKSPACE/script/bankiut.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiut.sql || { echo "Error: Failed to copy bankiut.sql"; exit 1; }
-          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot Bankiut < /tmp/bankiut.sql || { echo "Error: Failed to import bankiut.sql"; exit 1; }
+          echo "Copying SQL files into MariaDB container..."
+          container_id=$(docker ps -q --filter "ancestor=mariadb:10.4.1")
+          docker cp "$GITHUB_WORKSPACE/script/bankiut.sql" "$container_id:/tmp/bankiut.sql"
+          docker cp "$GITHUB_WORKSPACE/script/bankiuttest.sql" "$container_id:/tmp/bankiuttest.sql"
+          echo "SQL files successfully copied."
 
-          echo "Copying and importing bankiuttest.sql..."
-          docker cp "$GITHUB_WORKSPACE/script/bankiuttest.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiuttest.sql || { echo "Error: Failed to copy bankiuttest.sql"; exit 1; }
-          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot Bankiut_test < /tmp/bankiuttest.sql || { echo "Error: Failed to import bankiuttest.sql"; exit 1; }
+      - name: Import SQL files into databases
+        run: |
+          echo "Importing SQL files into databases..."
+          container_id=$(docker ps -q --filter "ancestor=mariadb:10.4.1")
+          docker exec "$container_id" mysql -u root -proot Bankiut < /tmp/bankiut.sql
+          docker exec "$container_id" mysql -u root -proot Bankiut_test < /tmp/bankiuttest.sql
+          echo "SQL import completed successfully."
 
       - name: Run SonarQube Analysis
         working-directory: ./_00_ASBank2023
