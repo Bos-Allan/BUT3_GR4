@@ -27,6 +27,8 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
+        volumes:
+          - mariadb_data:/var/lib/mysql
 
     steps:
       - uses: actions/checkout@v4
@@ -61,34 +63,39 @@ jobs:
             sleep 5
           done
 
-      # Créer la base de données projet_devops
+      # Créer les bases de données
       - name: Create databases
         run: |
           docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS Bankiut;"
           docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS Bankiut_test;"
 
-      # Copier et vérifier la présence de projet_devops.sql
-      - name: Copy devops.sql
-        run: |
-          docker cp "$GITHUB_WORKSPACE/script/bankiut.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiut.sql
-          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") ls /tmp/bankiut.sql || echo "File not found in container!"
-
-      # Importer projet_devops.sql
+      # Copier et importer les fichiers SQL
       - name: Import bankiut.sql
         run: |
-          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "cat /tmp/bankiut.sql | mysql -u root -proot Bankiut"
+          docker cp "$GITHUB_WORKSPACE/script/bankiut.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiut.sql
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "mysql -u root -proot Bankiut < /tmp/bankiut.sql"
 
-      # Copier et importer projet_devops_test.sql
-      - name: Copy bankiuttest.sql
+      - name: Import bankiuttest.sql
         run: |
           docker cp "$GITHUB_WORKSPACE/script/bankiuttest.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/bankiuttest.sql
-          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") ls /tmp/bankiuttest.sql || echo "File not found in container!"
-          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "cat /tmp/bankiuttest.sql | mysql -u root -proot Bankiut_test"
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "mysql -u root -proot Bankiut_test < /tmp/bankiuttest.sql"
 
-      ##### revoir cette partie pour config en focntion de votre sonarcloud
+      - name: Import dumpSQL.sql
+        run: |
+          docker cp "$GITHUB_WORKSPACE/script/dumpSQL.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/dumpSQL.sql
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "mysql -u root -proot Bankiut < /tmp/dumpSQL.sql"
+
+      - name: Import dumpSQL_JUnitTest.sql
+        run: |
+          docker cp "$GITHUB_WORKSPACE/script/dumpSQL_JUnitTest.sql" $(docker ps -q --filter "ancestor=mariadb:10.4.1"):/tmp/dumpSQL_JUnitTest.sql
+          docker exec $(docker ps -q --filter "ancestor=mariadb:10.4.1") /bin/sh -c "mysql -u root -proot Bankiut_test < /tmp/dumpSQL_JUnitTest.sql"
+
       - name: execute
         working-directory: ./_00_ASBank2023
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Bos-Allan_BUT3_GR4
+
+volumes:
+  mariadb_data:
