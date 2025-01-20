@@ -1,4 +1,4 @@
-##QualDev/DevOps
+## QualDev
 
 Membres du groupe :
 - Alexis Caron
