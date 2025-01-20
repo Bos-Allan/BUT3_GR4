@@ -11,5 +11,11 @@ Bugs Corrigés :
 - Bug n°1 non bloquant: Logo IUT qui ne s'affiche pas => Correction du lien de l'image qui n'existe plus sur le site de l'IUT par une image existante.
 - Bug n°2 non bloquant: Icon pour l'édition de compte qui se s'affiche pas => Correction du chemin de l'image qui n'existe plus sur "freeflaticons.com" par un icon existant à la place
 
+Coverage début : 
+
+![image](https://github.com/user-attachments/assets/a7bc8a16-b1c4-4a9d-b0de-c0c744e7ee60)
+
+Coverage après tests réalisée par Allan : 
+
 
 
