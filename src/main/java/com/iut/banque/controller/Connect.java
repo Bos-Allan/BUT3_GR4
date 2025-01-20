@@ -139,4 +139,12 @@ public class Connect extends ActionSupport {
 		return "SUCCESS";
 	}
 
+	public BanqueFacade getBanque() {
+		return banque;
+	}
+
+	public void setBanque(BanqueFacade banque) {
+		this.banque = banque;
+	}
+
 }
