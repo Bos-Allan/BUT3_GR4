@@ -22,6 +22,8 @@ import com.iut.banque.modele.CompteSansDecouvert;
 import com.iut.banque.modele.Gestionnaire;
 import com.iut.banque.modele.Utilisateur;
 
+import static com.iut.banque.use.encryptMethode.encrypt;
+
 /**
  * Implémentation de IDao utilisant Hibernate.
  * 
@@ -185,25 +187,6 @@ public class DaoHibernate implements IDao {
 	public void updateUser(Utilisateur u) {
 		Session session = sessionFactory.getCurrentSession();
 		session.update(u);
-	}
-
-
-	public static String encrypt(String userPwd) {
-		String hashedPassword = null;
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-512");
-			byte[] encryptPass = md.digest(userPwd.getBytes(StandardCharsets.UTF_8));
-
-			StringBuilder sb = new StringBuilder();
-			for(int i=0; i< encryptPass.length ;i++){
-				sb.append(Integer.toString((encryptPass[i] & 0xff) + 0x100, 16).substring(1));
-			}
-			hashedPassword = sb.toString();
-		}
-		catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
-		return hashedPassword;
 	}
 
 	/**
