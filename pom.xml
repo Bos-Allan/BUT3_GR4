@@ -192,5 +192,29 @@
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<version>3.12.4</version>
 		</dependency>
+
 	</dependencies>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>3.12.4</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>sonar-analysis</id>
+			<properties>
+				<maven.compiler.source>11</maven.compiler.source>
+				<maven.compiler.target>11</maven.compiler.target>
+				<sonar.jdk>17</sonar.jdk> <!-- Indique que Sonar doit utiliser Java 17 -->
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+
 </project>
