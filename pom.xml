@@ -199,4 +199,19 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>sonar-analysis</id>
+			<properties>
+				<maven.compiler.source>11</maven.compiler.source>
+				<maven.compiler.target>11</maven.compiler.target>
+				<sonar.jdk>17</sonar.jdk> <!-- Indique que Sonar doit utiliser Java 17 -->
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+
 </project>
