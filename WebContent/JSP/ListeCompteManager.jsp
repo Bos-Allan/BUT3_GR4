@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
-<!--  Définition variables de début 
+<!--  Définition variables de début
 <s:set var="aDecouvertTag" value="aDecouvert" />
 <s:if test="%{#bool_val == true}">
     TRUE</s:if>
@@ -97,9 +97,9 @@
 								</s:url>
 								<td><s:a href="%{editAccount}">
 										<img
-											src="http://freeflaticons.com/wp-content/uploads/2014/10/write-copy-14138051958gn4k.png"
-											style="width: 20px; height: 20px" alt="Editer ce compte"
-											title="Editer ce compte" />
+                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBqvw9fFq2uIc9H7kVCAz964W5Lw9CvK7BrQ&s"
+												style="width: 20px; height: 20px" alt="Editer ce compte"
+                                                title="Editer ce compte" />
 									</s:a></td>
 								<td><s:url action="deleteAccount" var="deleteAccount">
 										<s:param name="compte">
