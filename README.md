@@ -17,5 +17,4 @@ Coverage début :
 
 Coverage après tests réalisée par Allan : 
 
-
-
+![image](https://github.com/user-attachments/assets/439fcf17-33df-457b-ba3b-837ac70602cd)
