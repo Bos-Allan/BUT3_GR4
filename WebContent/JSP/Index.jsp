@@ -22,7 +22,8 @@
 		<a href="https://www.iut-metz.univ-lorraine.fr/">
 			<img
 					src="https://factuel.univ-lorraine.fr/sites/factuel.univ-lorraine.fr/files/field/image/2016/08/iut-metz_0.png"
-					alt="logo" />
+					alt="logo"
+					id="logo" />
 		</a>
 
 	</p>
