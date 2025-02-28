@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
+import org.junit.After;
 
 import javax.servlet.ServletContext;
 
@@ -90,7 +91,7 @@ public class TestsLoginInterceptor {
         assertEquals(null, result);
     }
 
-    @After
+   @After 
     public void tearDown() {
         mockedStatic.close();
     }
