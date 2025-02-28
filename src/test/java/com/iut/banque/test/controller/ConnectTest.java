@@ -1,5 +1,6 @@
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import com.iut.banque.controller.Connect;
 
 import com.iut.banque.constants.LoginConstants;
 import com.iut.banque.facade.BanqueFacade;
