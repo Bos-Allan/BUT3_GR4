@@ -1,4 +1,5 @@
 import com.iut.banque.constants.LoginConstants;
+import com.iut.banque.controller.Connect;
 import com.iut.banque.exceptions.IllegalFormatException; 
 import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Gestionnaire;
