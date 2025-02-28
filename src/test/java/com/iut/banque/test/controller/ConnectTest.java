@@ -1,8 +1,5 @@
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-import com.iut.banque.controller.Connect;
-
 import com.iut.banque.constants.LoginConstants;
+import com.iut.banque.exceptions.IllegalFormatException; 
 import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Gestionnaire;
 import com.iut.banque.modele.Utilisateur;
@@ -11,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConnectTest {
 
@@ -22,12 +22,11 @@ public class ConnectTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this); 
+        MockitoAnnotations.openMocks(this);
     }
 
-   @Test
-public void testLoginAsAdmin() {
-    try {
+    @Test
+    public void testLoginAsAdmin() throws IllegalFormatException { 
         Gestionnaire admin = new Gestionnaire("Admin", "User", "123 Admin Goat", true, "admin.user", "admin123");
 
         when(banqueFacade.tryLogin("admin.user", "admin123")).thenReturn(LoginConstants.MANAGER_IS_CONNECTED);
@@ -42,13 +41,10 @@ public void testLoginAsAdmin() {
 
         Utilisateur connectedUser = connect.getConnectedUser();
         assertTrue(connectedUser instanceof Gestionnaire, "L'utilisateur connecté devrait être un admin");
-    } catch (IllegalFormatException e) {
-        fail("Une exception IllegalFormatException a été levée : " + e.getMessage());
     }
-}
 
     @Test
-    public void testLoginFailure() {
+    public void testLoginFailure() throws IllegalFormatException { 
         when(banqueFacade.tryLogin("wrong.user", "wrong.pwd")).thenReturn(LoginConstants.LOGIN_FAILED);
 
         connect.setUserCde("wrong.user");
