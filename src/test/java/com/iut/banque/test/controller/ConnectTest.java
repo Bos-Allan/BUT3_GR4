@@ -25,12 +25,12 @@ public class ConnectTest {
         MockitoAnnotations.openMocks(this); 
     }
 
-    @Test
-    public void testLoginAsAdmin() {
+   @Test
+public void testLoginAsAdmin() {
+    try {
         Gestionnaire admin = new Gestionnaire("Admin", "User", "123 Admin Goat", true, "admin.user", "admin123");
 
         when(banqueFacade.tryLogin("admin.user", "admin123")).thenReturn(LoginConstants.MANAGER_IS_CONNECTED);
-
         when(banqueFacade.getConnectedUser()).thenReturn(admin);
 
         connect.setUserCde("admin.user");
@@ -42,7 +42,10 @@ public class ConnectTest {
 
         Utilisateur connectedUser = connect.getConnectedUser();
         assertTrue(connectedUser instanceof Gestionnaire, "L'utilisateur connecté devrait être un admin");
+    } catch (IllegalFormatException e) {
+        fail("Une exception IllegalFormatException a été levée : " + e.getMessage());
     }
+}
 
     @Test
     public void testLoginFailure() {
