@@ -8,9 +8,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.After;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
@@ -20,7 +18,6 @@ import javax.servlet.ServletContext;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-@Ignore
 public class TestsLoginInterceptor {
 
     private LoginInterceptor interceptor;
@@ -40,16 +37,13 @@ public class TestsLoginInterceptor {
         banqueFacadeMock = mock(BanqueFacade.class);
         actionContextMock = mock(ActionContext.class);
 
-        // Mock ServletActionContext using mockito-inline
         mockedStatic = Mockito.mockStatic(ServletActionContext.class);
         mockedStatic.when(ServletActionContext::getServletContext).thenReturn(servletContextMock);
 
-        // Mock Spring dependencies
         when(servletContextMock.getAttribute("org.springframework.web.context.WebApplicationContext.ROOT"))
                 .thenReturn(appContextMock);
         when(appContextMock.getBean("banqueFacade")).thenReturn(banqueFacadeMock);
 
-        // Mock ActionContext
         when(invocationMock.getInvocationContext()).thenReturn(actionContextMock);
     }
 
