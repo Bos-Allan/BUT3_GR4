@@ -41,8 +41,6 @@ import com.iut.banque.modele.Utilisateur;
 
 public class TestsDaoHibernate {
 
-	// Indique que c'est un champ à injecter automatiquement. Le bean est choisi
-	// en fonction du type.
 	@Autowired
 	private DaoHibernate daoHibernate;
 
