@@ -1,5 +1,14 @@
 ## QualDev
 
+## Information sur Sprint 3
+
+ -Rajout de tests selenium 
+- Rajout de plus de tests avec JUnit et Mockito
+- Modification du build github action pour ignorer les tests selenium afin de ne pas bloquer le build car sinon il faut lancer le serveur tomcat avant de réaliser les tests 
+
+- Coverage après tests réalisée fin sprint 3 :
+
+
 Membres du groupe :
 - Alexis Caron
 - Allan Bosquet
