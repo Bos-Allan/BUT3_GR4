@@ -16,7 +16,7 @@
 		</s:form>
 	</div>
 	<h1>Tableau de bord</h1>
-	<p>
+	<p id="userConnected">
 		Bienvenue <b><s:property value="connectedUser.prenom" /> <s:property
 				value="connectedUser.nom" /></b> !
 	</p>

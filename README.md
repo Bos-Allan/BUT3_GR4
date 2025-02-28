@@ -7,6 +7,8 @@
 - Modification du build github action pour ignorer les tests selenium afin de ne pas bloquer le build car sinon il faut lancer le serveur tomcat avant de réaliser les tests 
 
 - Coverage après tests réalisée fin sprint 3 :
+  ![image](https://github.com/user-attachments/assets/fb500fd7-5e78-499b-ae19-a35d65b01710)
+
 
 
 Membres du groupe :
