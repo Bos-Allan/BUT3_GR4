@@ -1,6 +1,8 @@
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.iut.banque.constants.LoginConstants;
 import com.iut.banque.controller.Connect;
-import com.iut.banque.exceptions.IllegalFormatException; 
 import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Gestionnaire;
 import com.iut.banque.modele.Utilisateur;
@@ -9,9 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.apache.struts2.ServletActionContext;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import javax.servlet.ServletContext;
 
 public class ConnectTest {
 
@@ -21,13 +25,25 @@ public class ConnectTest {
     @InjectMocks
     private Connect connect;
 
+    @Mock
+    private ServletContext servletContext;
+
+    @Mock
+    private WebApplicationContext webApplicationContext; 
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        when(ServletActionContext.getServletContext()).thenReturn(servletContext);
+
+        when(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext)).thenReturn(webApplicationContext);
+
+        when(webApplicationContext.getBean("banqueFacade")).thenReturn(banqueFacade);
     }
 
     @Test
-    public void testLoginAsAdmin() throws IllegalFormatException { 
+    public void testLoginAsAdmin() throws Exception {
         Gestionnaire admin = new Gestionnaire("Admin", "User", "123 Admin Goat", true, "admin.user", "admin123");
 
         when(banqueFacade.tryLogin("admin.user", "admin123")).thenReturn(LoginConstants.MANAGER_IS_CONNECTED);
@@ -45,7 +61,7 @@ public class ConnectTest {
     }
 
     @Test
-    public void testLoginFailure() throws IllegalFormatException { 
+    public void testLoginFailure() throws Exception {
         when(banqueFacade.tryLogin("wrong.user", "wrong.pwd")).thenReturn(LoginConstants.LOGIN_FAILED);
 
         connect.setUserCde("wrong.user");
